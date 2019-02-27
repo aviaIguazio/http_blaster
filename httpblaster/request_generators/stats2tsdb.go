@@ -1,6 +1,8 @@
 package request_generators
 
 import (
+	log "github.com/sirupsen/logrus"
+
 	"github.com/v3io/http_blaster/httpblaster/config"
 	"github.com/v3io/http_blaster/httpblaster/data_generator"
 	"runtime"
@@ -9,7 +11,7 @@ import (
 )
 
 var gen = data_generator.MemoryGenerator{}
-
+var numOfRequests = 0
 
 type Stats2TSDB struct {
 	workload config.Workload
@@ -23,17 +25,21 @@ func (self *Stats2TSDB) UseCommon(c RequestCommon) {
 func (self *Stats2TSDB) generate_request(ch_records chan []string, ch_req chan *Request, host string,
 	wg *sync.WaitGroup, cpuNumber int,wl config.Workload) {
 		defer wg.Done()
-		for i:=0;i<wl.Count ; i++ {
+		for i:=0;i<wl.Count/runtime.NumCPU() ; i++ {
+
 
 			var contentType string = "text/html"
 			json_payload := gen.GenerateRandomData(strconv.Itoa(cpuNumber))
 			for _, payload := range json_payload {
+				numOfRequests +=1
+
 				req := AcquireRequest()
 				self.PrepareRequest(contentType, self.workload.Header, "PUT",
 					self.base_uri, payload, host, req.Request)
 				ch_req <- req
 			}
 		}
+	log.Info("Number of Payloads" , numOfRequests)
 }
 
 func (self *Stats2TSDB) generate(ch_req chan *Request, payload string, host string,wl config.Workload) {
