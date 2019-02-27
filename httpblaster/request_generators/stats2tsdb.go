@@ -26,7 +26,7 @@ func (self *Stats2TSDB) generate_request(ch_records chan []string, ch_req chan *
 		for i:=0;i<wl.Count ; i++ {
 
 			var contentType string = "text/html"
-			json_payload := gen.GenerateRandomData(strconv.Itoa(i))
+			json_payload := gen.GenerateRandomData(strconv.Itoa(cpuNumber))
 			for _, payload := range json_payload {
 				req := AcquireRequest()
 				self.PrepareRequest(contentType, self.workload.Header, "PUT",
