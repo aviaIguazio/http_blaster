@@ -1,8 +1,6 @@
 package request_generators
 
 import (
-	log "github.com/sirupsen/logrus"
-
 	"github.com/v3io/http_blaster/httpblaster/config"
 	"github.com/v3io/http_blaster/httpblaster/data_generator"
 	"runtime"
@@ -39,7 +37,6 @@ func (self *Stats2TSDB) generate_request(ch_records chan []string, ch_req chan *
 				ch_req <- req
 			}
 		}
-	log.Info("Number of Payloads" , numOfRequests)
 }
 
 func (self *Stats2TSDB) generate(ch_req chan *Request, payload string, host string,wl config.Workload) {

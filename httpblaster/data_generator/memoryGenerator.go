@@ -3,8 +3,7 @@ package data_generator
 import (
 	"encoding/json"
 	"fmt"
-	"strings"
-
+	log "github.com/sirupsen/logrus"
 	//"github.com/shirou/gopsutil/cpu"
 	"github.com/shirou/gopsutil/mem"
 	"github.com/v3io/http_blaster/httpblaster/igz_data"
@@ -25,7 +24,7 @@ func  (self *MemoryGenerator) GenerateRandomData(cpuNumber string) []string{
 	//fmt.Println(stats)
 	v, _ := mem.VirtualMemory()
 	payloads :=self.GenerateJsonArray(v ,cpuNumber)
-	fmt.Println(strings.Join(payloads, ", "))
+	log.Debug("payload ", payloads)
 	return payloads
 }
 
